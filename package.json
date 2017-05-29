@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "react": "^15.5.4",
+    "react-async-script-loader": "^0.2.2",
     "react-dom": "^15.5.4"
   },
   "devDependencies": {
