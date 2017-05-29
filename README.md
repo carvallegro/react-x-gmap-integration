@@ -1,82 +1,73 @@
 # React x GoogleMapJS
 Integrate the Google Maps JS API into a React application
 
-## Step 1 : Loading the library
+## Step 2 : Display the map
 
-Now, let's start with the serious stuff and load the GoogleMaps library. Because we're taking it slow, we won't display the map just yet. We'll just make sure that it's been loaded and then display a message accordingly. 
+Displaying a message is obviously not enough, we want to display a map !
 
-### Display a message
+### Prepare the map container
+We are going to put the map in a container. It will allow us to easily size the map in the future.
 
-To display a message, we'll just add a property in the Component's state. To do so, let's declare the initial state and display the message
-
+Add the container inside the App renderer :
 ```ecmascript 6
-class App extends Component {
+<div className="App">
+    {this.state.mapMessage}
+    <div className="mapContainer">
+        This is the map Container.
+    </div>
+</div>
+```
 
-    constructor(props) {
-        super(props);
-        // This is the initial state
-        this.state = {
-            mapMessage: 'Not loaded yet.'
-        };
-    }
-    
-    render() {
-        // Instead of the "Hello World", we're gonna display mapMessage.
-        return (
-            <div className="App">
-                {this.state.mapMessage}
-            </div>
-        );
-    }
+Don't forget to add some styling into the App.css
+```css
+.mapContainer {
+    position: absolute;
+    height: 300px;
+    width: 500px;
+    background-color: grey;
 }
 ```
 
-### Using `react-async-script-loader`
+### Initialize the map object
+Once the map object has been initialized, we want to create the google map object. Create a `initMap()` class method and call it into the `componentWillReceiveProps()` method (On success obviously).
 
-> If not done yet, use npm to install the dependency
-> ```
-> npm i --save react-async-script-loader
-> ```
-
-Because this library has to be loaded asynchronously we're going to use react-async-script-loader to load the map.
-
-react-async-script-loader works in two steps :
-
-#### 1. Decorate the component
-Instead of doing a basic export of the class like, We will call the script loader to decorate the export :
 ```ecmascript 6
-// The old way
-export default App;
-// With the scriploader
-export default scriptLoader([
-    'https://maps.googleapis.com/maps/api/js?key=' + process.env.REACT_APP_GOOGLE_MAP_API_KEY + '&libraries=drawing'
-])(App);
+initMap() {
+    const map = new google.maps.Map(this.refs.map, {
+        center: {lat: 61.769256, lng: 92.111992},
+        zoom: 3
+    });
+    this.setState({
+        map: map
+    });
+}
 ```
-Note that the library is between brackets. It means that it will be loaded parallelly.
+> Do not forget to add the map object in the initial state with a `null` value !
 
-> Make sure that your REACT_APP_GOOGLE_MAP_API_KEY environment variable has the right value.
 
-#### 2. Write the callback method
-Once scriptLoader has loaded every script, it will call the `componentWillReceiveProps()` method of the App component, passing two parameters : `{ isScriptLoaded, isScriptLoadSucceed }`.
-
+Because the google.maps library is not loaded on compile time, ESLint will throw an error. To bypass this error, just add this line before the class declaration :
 ```ecmascript 6
-componentWillReceiveProps({isScriptLoaded, isScriptLoadSucceed}) {
-    if (isScriptLoaded && !this.props.isScriptLoaded) {
-        if (isScriptLoadSucceed) {
-            this.setState({
-                mapMessage: 'Map IS loaded ! :)'
-            });
-        }
-        else {
-            this.setState({
-                mapMessage: 'Map NOT loaded ! :('
-            });
-        }
-    }
+/*global google*/
+class App extends Component {
+    //...
+}
+```
+
+To display the map, modify the `.mapContainer` element content : 
+```html
+<div className="mapContainer">
+   <div ref="map" className="map">test</div>
+</div>
+```
+
+Let's not forget to add the map styling in the App.css file !
+```css
+.mapContainer > .map {
+    height: 100%;
+    width: 100%;
 }
 ```
 
 ### Let's run this !
 
-Run `npm start`. You should see a "Not loaded yet." shortly followed by a "Map IS loaded ! :)" message.
-If you got a "Map NOT loaded ! :(" message, well... You have a problem somewhere.
+Run `npm start`. The map should be loaded and centered on Russia :)

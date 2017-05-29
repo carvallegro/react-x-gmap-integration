@@ -3,12 +3,14 @@ import scriptLoader from 'react-async-script-loader'
 
 import './App.css';
 
+/*global google*/
 class App extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            mapMessage: 'Not loaded yet.'
+            mapMessage: 'Not loaded yet.',
+            map: null
         };
     }
 
@@ -18,6 +20,7 @@ class App extends Component {
                 this.setState({
                     mapMessage: 'Map IS loaded ! :)'
                 });
+                this.initMap();
             }
             else {
                 this.setState({
@@ -27,10 +30,23 @@ class App extends Component {
         }
     }
 
+    initMap() {
+        const map = new google.maps.Map(this.refs.map, {
+            center: {lat: 61.769256, lng: 92.111992},
+            zoom: 3
+        });
+        this.setState({
+            map: map
+        });
+    }
+
     render() {
         return (
             <div className="App">
                 {this.state.mapMessage}
+                <div className="mapContainer">
+                    <div ref="map" className="map">test</div>
+                </div>
             </div>
         );
     }
