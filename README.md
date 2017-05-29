@@ -2,7 +2,8 @@
 Integrate the Google Maps JS API into a React application
 
 ### Dependencies
-Because I'm a lazy person, I've generated the project using [create-react-app](https://github.com/facebookincubator/create-react-app). We will also use the [react-async-script-loader](https://github.com/leozdgao/react-async-script-loader) component to import the [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/).
+Because I'm a lazy person, I've generated the project using [create-react-app](https://github.com/facebookincubator/create-react-app).
+We will also use the [react-async-script-loader](https://github.com/leozdgao/react-async-script-loader) component to import the [Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/).
 
 ## Step 0 : Setting up the environment
 
@@ -43,3 +44,6 @@ class App extends Component {
 
 export default App;
 ```
+### Let's run this !
+
+Run `npm start`. You should see a simple "Hello World" message. 
