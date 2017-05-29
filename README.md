@@ -46,4 +46,4 @@ export default App;
 ```
 ### Let's run this !
 
-Run `npm start`. You should see a simple "Hello World" message. 
+Run `npm start`. You should see a simple "Hello World" message.  
