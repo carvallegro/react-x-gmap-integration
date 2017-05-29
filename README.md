@@ -9,7 +9,7 @@ Displaying a message is obviously not enough, we want to display a map !
 We are going to put the map in a container. It will allow us to easily size the map in the future.
 
 Add the container inside the App renderer :
-```ecmascript 6
+```javascript
 <div className="App">
     {this.state.mapMessage}
     <div className="mapContainer">
@@ -31,7 +31,7 @@ Don't forget to add some styling into the App.css
 ### Initialize the map object
 Once the map object has been initialized, we want to create the google map object. Create a `initMap()` class method and call it into the `componentWillReceiveProps()` method (On success obviously).
 
-```ecmascript 6
+```javascript
 initMap() {
     const map = new google.maps.Map(this.refs.map, {
         center: {lat: 61.769256, lng: 92.111992},
@@ -46,7 +46,7 @@ initMap() {
 
 
 Because the google.maps library is not loaded on compile time, ESLint will throw an error. To bypass this error, just add this line before the class declaration :
-```ecmascript 6
+```javascript
 /*global google*/
 class App extends Component {
     //...
