@@ -1,16 +1,16 @@
 import React, {Component} from 'react';
+import Map from './Map/Map'
 import scriptLoader from 'react-async-script-loader'
 
 import './App.css';
 
-/*global google*/
+
 class App extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            mapMessage: 'Not loaded yet.',
-            map: null
+            hasLoaded: false
         };
     }
 
@@ -18,35 +18,27 @@ class App extends Component {
         if (isScriptLoaded && !this.props.isScriptLoaded) {
             if (isScriptLoadSucceed) {
                 this.setState({
-                    mapMessage: 'Map IS loaded ! :)'
+                    hasLoaded: true
                 });
-                this.initMap();
             }
             else {
                 this.setState({
-                    mapMessage: 'Map NOT loaded ! :('
+                    hasLoaded: false
                 });
             }
         }
     }
 
-    initMap() {
-        const map = new google.maps.Map(this.refs.map, {
-            center: {lat: 61.769256, lng: 92.111992},
-            zoom: 3
-        });
-        this.setState({
-            map: map
-        });
-    }
-
     render() {
+        if(!this.state.hasLoaded) {
+            return (
+                <h1>Please Wait</h1>
+            )
+        }
+
         return (
             <div className="App">
-                {this.state.mapMessage}
-                <div className="mapContainer">
-                    <div ref="map" className="map">test</div>
-                </div>
+                <Map />
             </div>
         );
     }

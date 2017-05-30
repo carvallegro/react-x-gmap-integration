@@ -1,73 +1,77 @@
 # React x GoogleMapJS
 Integrate the Google Maps JS API into a React application
 
-## Step 2 : Display the map
+## Step 3 : Refactoring
+So we have now a functional map being displayed. That's good. But we're going to make it better by putting the map code into a component.
 
-Displaying a message is obviously not enough, we want to display a map !
+### Creating the files
+Create the folder `src/Map` and create two files in it : `Map.js` and `Map.css`. 
 
-### Prepare the map container
-We are going to put the map in a container. It will allow us to easily size the map in the future.
 
-Add the container inside the App renderer :
+### The Map class
+Into the `Map.js` file, create a Map class extending the React Component class with the following render method :
+
 ```javascript
-<div className="App">
-    {this.state.mapMessage}
-    <div className="mapContainer">
-        This is the map Container.
-    </div>
-</div>
-```
-
-Don't forget to add some styling into the App.css
-```css
-.mapContainer {
-    position: absolute;
-    height: 300px;
-    width: 500px;
-    background-color: grey;
+render() {
+    return (
+        <div>
+            HelloMap
+        </div>
+    )
 }
 ```
 
-### Initialize the map object
-Once the map object has been initialized, we want to create the google map object. Create a `initMap()` class method and call it into the `componentWillReceiveProps()` method (On success obviously).
+### Changing the loading behavior
+To prepare the field for further modifications, we are going to replace the `mapMessage` prop by a boolean.
+Add a `hasLoaded` field with an initial state of `false` to the state. Change the `componentWillReceiveProps()` so it modifies `hasLoaded` accordingly.
+
+You can now delete every use of `mapMessage` in App.js.
+
+### Moving the map object into the Map class
+This section involves a lot of changes in the code. First of all, you need to move the `initMap()` method to the Map class.
+
+Move the content of `App.css` into `Map.css`.
+
+Move the `div.mapContainer` element to the Map's `render()` method and replace it with a `<Map />` element (do not forget to import it!)
 
 ```javascript
-initMap() {
-    const map = new google.maps.Map(this.refs.map, {
-        center: {lat: 61.769256, lng: 92.111992},
-        zoom: 3
-    });
-    this.setState({
-        map: map
-    });
+// App.js render method 
+render() {
+    return (
+        <div className="App">
+            <Map />
+        </div>
+    );
+}
+
+// Map.js render method
+render() {
+    return (
+        <div className="mapContainer">
+            <div ref="map" className="map">test</div>
+        </div>
+    )
 }
 ```
-> Do not forget to add the map object in the initial state with a `null` value !
 
-
-Because the google.maps library is not loaded on compile time, ESLint will throw an error. To bypass this error, just add this line before the class declaration :
+It doesn't do much for now because we haven't called `initMap()` anywhere. We could try to call it into the constructor but we need the component to be rendered. To do so, we're going to use the `componentDidMount()` method.
 ```javascript
-/*global google*/
-class App extends Component {
-    //...
+componentDidMount() {
+    this.initMap();
 }
 ```
 
-To display the map, modify the `.mapContainer` element content : 
-```html
-<div className="mapContainer">
-   <div ref="map" className="map">test</div>
-</div>
-```
+If you run it right now, you'll see that there is a whole bunch of errors. that's because we're rendering the Map component before the library is loaded !
 
-Let's not forget to add the map styling in the App.css file !
-```css
-.mapContainer > .map {
-    height: 100%;
-    width: 100%;
+Now we are going to use the `hasLoaded` property we declared before in the App's state. Add the following code at the beginning of the App's render method :
+```javascript
+if(!this.state.hasLoaded) {
+    return (
+        <h1>Please Wait</h1>
+    )
 }
 ```
 
 ### Let's run this !
 
-Run `npm start`. The map should be loaded and centered on Russia :)
+Run `npm start`. You should have the same result as before.
