@@ -2,6 +2,7 @@
  * Created by vcarmignac on 29/5/17.
  */
 import React, {Component} from 'react'
+import Marker from "../Marker/Marker";
 
 /*global google*/
 class Map extends Component {
@@ -9,7 +10,7 @@ class Map extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            map: null
+            map: null,
         };
     }
 
@@ -31,6 +32,7 @@ class Map extends Component {
         return (
             <div className="mapContainer">
                 <div ref="map" className="map"><h1>Please wait</h1></div>
+                <Marker position={{lat: 61.769256, lng: 92.111992}} map={this.state.map}/>
             </div>
         )
     }
